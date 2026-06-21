@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | 소드빌궁 202616348</title>
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #111418;
+    --bg3: #1a1f26;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaed;
+    --text2: #8b929e;
+    --text3: #555d6b;
+    --accent: #3b82f6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; min-height: 100vh; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 56px;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links a {
+    font-size: 13px; color: var(--text2); text-decoration: none;
+    padding: 6px 14px; border-radius: 6px; transition: all 0.15s; margin-left: 2px;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--bg3); }
+  .nav-links a.active { color: var(--text); }
+
+  .page { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem; }
+
+  .hero { margin-bottom: 3rem; }
+  .avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: #fff;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; margin-bottom: 4px; }
+  .hero .sub { font-size: 15px; color: var(--text2); margin-bottom: 1rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-size: 12px; padding: 4px 12px; border-radius: 999px;
+    border: 1px solid var(--border2); color: var(--text2); background: var(--bg2);
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  .section { margin-bottom: 2.5rem; }
+  .section h2 { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 1.25rem; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .info-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .info-card .lbl { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .info-card .val { font-size: 14px; color: var(--text); font-weight: 500; }
+
+  .exp-item { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+  .exp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+  .exp-content .title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .exp-content .org { font-size: 13px; color: var(--accent); margin: 2px 0; }
+  .exp-content .period { font-size: 12px; color: var(--text3); }
+  .exp-content .desc { font-size: 13px; color: var(--text2); margin-top: 6px; line-height: 1.6; }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .skill-item {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; color: var(--text2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .skill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  .lang-row { display: flex; flex-direction: column; gap: 10px; }
+  .lang-item { display: flex; align-items: center; gap: 12px; }
+  .lang-name { font-size: 13px; color: var(--text); min-width: 80px; }
+  .lang-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .lang-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .lang-level { font-size: 12px; color: var(--text3); min-width: 70px; text-align: right; }
+
+  .goal-box { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 16px 18px; }
+  .goal-box p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .goal-box strong { color: var(--text); font-weight: 500; }
+
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--text3); border-top: 1px solid var(--border); margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">소드빌궁 <span>·</span> 202616348</div>
+  <div class="nav-links">
+    <a href="index.html">Calendar</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="avatar">소</div>
+    <h1>소드빌궁 (Sodbilguun)</h1>
+    <div class="sub">Business Administration Student · Konkuk University</div>
+    <div class="tags">
+      <span class="tag">Student ID: 202616348</span>
+      <span class="tag">🇲🇳 Mongolia</span>
+      <span class="tag">📍 Seoul, Korea</span>
+      <span class="tag">Forex Trader</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Profile</h2>
+    <div class="info-grid">
+      <div class="info-card"><div class="lbl">University</div><div class="val">Konkuk University</div></div>
+      <div class="info-card"><div class="lbl">Major</div><div class="val">Business Administration</div></div>
+      <div class="info-card"><div class="lbl">Student ID</div><div class="val">202616348</div></div>
+      <div class="info-card"><div class="lbl">Year</div><div class="val">1st Semester, 2026</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Experience</h2>
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-content">
+        <div class="title">Proprietary Forex Trader</div>
+        <div class="org">AquaFunded · Prop Firm</div>
+        <div class="period">2025 – Present</div>
+        <div class="desc">Trading forex and CFD instruments on funded prop firm accounts. Focus on NAS100, SP500, and major FX pairs using price action and support/resistance frameworks. 55% win rate, 1:2.5 R:R ratio.</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-content">
+        <div class="title">International Business Student</div>
+        <div class="org">Konkuk University · Seoul</div>
+        <div class="period">2026 – Present</div>
+        <div class="desc">Studying core business subjects including International Business, Economics, and Management. Produced country competitiveness analyses on Mongolia and Singapore.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-item"><span class="skill-dot"></span>Price Action</div>
+      <div class="skill-item"><span class="skill-dot"></span>Risk Management</div>
+      <div class="skill-item"><span class="skill-dot"></span>Market Analysis</div>
+      <div class="skill-item"><span class="skill-dot"></span>MT5 / MT4</div>
+      <div class="skill-item"><span class="skill-dot"></span>Economic Research</div>
+      <div class="skill-item"><span class="skill-dot"></span>MS Office</div>
+      <div class="skill-item"><span class="skill-dot"></span>Business Writing</div>
+      <div class="skill-item"><span class="skill-dot"></span>Data Analysis</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Languages</h2>
+    <div class="lang-row">
+      <div class="lang-item">
+        <div class="lang-name">Mongolian</div>
+        <div class="lang-bar"><div class="lang-fill" style="width:100%"></div></div>
+        <div class="lang-level">Native</div>
+      </div>
+      <div class="lang-item">
+        <div class="lang-name">English</div>
+        <div class="lang-bar"><div class="lang-fill" style="width:70%"></div></div>
+        <div class="lang-level">Intermediate</div>
+      </div>
+      <div class="lang-item">
+        <div class="lang-name">Korean</div>
+        <div class="lang-bar"><div class="lang-fill" style="width:40%"></div></div>
+        <div class="lang-level">Beginner</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Goals</h2>
+    <div class="goal-box">
+      <p>Building a long-term career in <strong>global finance and trading</strong>. The plan: scale prop firm accounts through consistent execution, pursue <strong>CFA credentials</strong>, and develop multilingual capability in English, Korean, and Mandarin as a competitive edge in international markets. Long-term vision includes building wealth to support family back in <strong>Uvurkhangai, Mongolia</strong>.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>소드빌궁 (202616348) · Konkuk University · 2026</footer>
+
+</body>
+</html>

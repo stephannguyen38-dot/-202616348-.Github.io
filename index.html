@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economic Calendar | 소드빌궁</title>
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #111418;
+    --bg3: #1a1f26;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaed;
+    --text2: #8b929e;
+    --text3: #555d6b;
+    --accent: #3b82f6;
+    --accent2: #1d4ed8;
+    --high: #ef4444;
+    --high-bg: rgba(239,68,68,0.12);
+    --med: #f59e0b;
+    --med-bg: rgba(245,158,11,0.12);
+    --low: #22c55e;
+    --low-bg: rgba(34,197,94,0.12);
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; min-height: 100vh; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 56px;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 0; }
+  .nav-links a {
+    font-size: 13px; color: var(--text2); text-decoration: none;
+    padding: 6px 14px; border-radius: 6px; transition: all 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--bg3); }
+  .nav-links a.active { color: var(--text); }
+  .nav-right { font-size: 12px; color: var(--text3); }
+
+  .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .page-header { margin-bottom: 1.5rem; }
+  .page-header h1 { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .page-header p { font-size: 13px; color: var(--text2); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stat-card .label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .stat-card .value { font-size: 26px; font-weight: 700; }
+  .stat-card .value.h { color: var(--high); }
+  .stat-card .value.m { color: var(--med); }
+  .stat-card .value.l { color: var(--low); }
+  .stat-card .value.t { color: var(--text); }
+
+  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .filter-btn {
+    font-size: 12px; padding: 5px 14px; border-radius: 999px;
+    border: 1px solid var(--border2); background: transparent;
+    color: var(--text2); cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:hover { background: var(--bg3); color: var(--text); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .cur-filter {
+    font-size: 12px; padding: 5px 10px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg2);
+    color: var(--text); margin-left: auto;
+  }
+
+  .table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600;
+    color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border); background: var(--bg3);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody td { padding: 11px 14px; vertical-align: middle; }
+  .day-row td { background: var(--bg3); color: var(--text3); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 7px 14px; }
+
+  .time { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: var(--text3); }
+  .cur-badge { font-size: 11px; font-weight: 700; color: var(--text2); display: flex; align-items: center; gap: 5px; }
+  .event-name { font-weight: 500; color: var(--text); }
+  .val { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .muted { color: var(--text3); }
+  .forecast { color: var(--text2); }
+
+  .impact-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
+  .impact-badge.high { background: var(--high-bg); color: var(--high); }
+  .impact-badge.medium { background: var(--med-bg); color: var(--med); }
+  .impact-badge.low { background: var(--low-bg); color: var(--low); }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  .live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 5px; animation: blink 1.4s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .empty { text-align: center; padding: 3rem; color: var(--text3); font-size: 13px; }
+
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--text3); border-top: 1px solid var(--border); margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">소드빌궁 <span>·</span> 202616348</div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Calendar</a>
+    <a href="about.html">About</a>
+  </div>
+  <div class="nav-right"><span class="live-dot"></span>Live</div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Economic Calendar</h1>
+    <p>Weekly high-impact macro events — <span id="week-range"></span></p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="label">High impact</div><div class="value h" id="s-high">0</div></div>
+    <div class="stat-card"><div class="label">Medium impact</div><div class="value m" id="s-med">0</div></div>
+    <div class="stat-card"><div class="label">Low impact</div><div class="value l" id="s-low">0</div></div>
+    <div class="stat-card"><div class="label">Total events</div><div class="value t" id="s-total">0</div></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="filter-btn active" data-f="all">All</button>
+    <button class="filter-btn" data-f="high">🔴 High</button>
+    <button class="filter-btn" data-f="medium">🟡 Medium</button>
+    <button class="filter-btn" data-f="low">🟢 Low</button>
+    <select class="cur-filter" id="cur-select">
+      <option value="all">All currencies</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+      <option value="JPY">JPY</option>
+      <option value="AUD">AUD</option>
+      <option value="CAD">CAD</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:75px">Time</th>
+          <th style="width:55px">Cur</th>
+          <th>Event</th>
+          <th style="width:80px">Impact</th>
+          <th style="width:80px">Actual</th>
+          <th style="width:80px">Forecast</th>
+          <th style="width:80px">Previous</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>Economic Calendar · 소드빌궁 (202616348) · Konkuk University · Built with AI</footer>
+
+<script>
+const events = [
+  { day:"Mon, Jun 23", time:"09:00", cur:"EUR", flag:"🇪🇺", name:"German Manufacturing PMI", impact:"high", actual:null, forecast:"45.8", prev:"45.4" },
+  { day:"Mon, Jun 23", time:"09:30", cur:"GBP", flag:"🇬🇧", name:"UK Services PMI", impact:"high", actual:null, forecast:"52.1", prev:"52.0" },
+  { day:"Mon, Jun 23", time:"14:45", cur:"USD", flag:"🇺🇸", name:"US Manufacturing PMI Flash", impact:"high", actual:null, forecast:"49.9", prev:"49.8" },
+  { day:"Mon, Jun 23", time:"15:00", cur:"USD", flag:"🇺🇸", name:"Existing Home Sales", impact:"medium", actual:null, forecast:"4.10M", prev:"4.02M" },
+  { day:"Mon, Jun 23", time:"16:00", cur:"USD", flag:"🇺🇸", name:"CB Consumer Confidence", impact:"medium", actual:null, forecast:"98.5", prev:"98.0" },
+  { day:"Tue, Jun 24", time:"01:30", cur:"AUD", flag:"🇦🇺", name:"RBA Meeting Minutes", impact:"medium", actual:null, forecast:"—", prev:"—" },
+  { day:"Tue, Jun 24", time:"09:00", cur:"EUR", flag:"🇪🇺", name:"German IFO Business Climate", impact:"high", actual:null, forecast:"87.3", prev:"87.5" },
+  { day:"Tue, Jun 24", time:"13:30", cur:"USD", flag:"🇺🇸", name:"Durable Goods Orders m/m", impact:"high", actual:null, forecast:"-1.1%", prev:"7.5%" },
+  { day:"Tue, Jun 24", time:"15:00", cur:"USD", flag:"🇺🇸", name:"New Home Sales", impact:"medium", actual:null, forecast:"680K", prev:"666K" },
+  { day:"Tue, Jun 24", time:"15:30", cur:"USD", flag:"🇺🇸", name:"Crude Oil Inventories", impact:"medium", actual:null, forecast:"-1.3M", prev:"-0.4M" },
+  { day:"Wed, Jun 25", time:"00:50", cur:"JPY", flag:"🇯🇵", name:"BoJ Meeting Minutes", impact:"high", actual:null, forecast:"—", prev:"—" },
+  { day:"Wed, Jun 25", time:"09:00", cur:"EUR", flag:"🇪🇺", name:"ECB Economic Bulletin", impact:"medium", actual:null, forecast:"—", prev:"—" },
+  { day:"Wed, Jun 25", time:"12:00", cur:"GBP", flag:"🇬🇧", name:"BoE Financial Stability Report", impact:"high", actual:null, forecast:"—", prev:"—" },
+  { day:"Wed, Jun 25", time:"13:30", cur:"USD", flag:"🇺🇸", name:"Final GDP q/q", impact:"high", actual:null, forecast:"2.4%", prev:"2.4%" },
+  { day:"Wed, Jun 25", time:"13:30", cur:"USD", flag:"🇺🇸", name:"Weekly Unemployment Claims", impact:"medium", actual:null, forecast:"235K", prev:"242K" },
+  { day:"Thu, Jun 26", time:"01:30", cur:"JPY", flag:"🇯🇵", name:"Tokyo Core CPI y/y", impact:"high", actual:null, forecast:"2.9%", prev:"3.1%" },
+  { day:"Thu, Jun 26", time:"09:00", cur:"EUR", flag:"🇪🇺", name:"German Gfk Consumer Confidence", impact:"low", actual:null, forecast:"-20.0", prev:"-20.6" },
+  { day:"Thu, Jun 26", time:"13:30", cur:"USD", flag:"🇺🇸", name:"Core PCE Price Index m/m", impact:"high", actual:null, forecast:"0.1%", prev:"0.1%" },
+  { day:"Thu, Jun 26", time:"15:00", cur:"USD", flag:"🇺🇸", name:"Michigan Consumer Sentiment", impact:"medium", actual:null, forecast:"65.6", prev:"65.6" },
+  { day:"Fri, Jun 27", time:"00:30", cur:"JPY", flag:"🇯🇵", name:"CPI y/y", impact:"high", actual:null, forecast:"3.4%", prev:"3.6%" },
+  { day:"Fri, Jun 27", time:"09:30", cur:"GBP", flag:"🇬🇧", name:"GDP m/m", impact:"high", actual:null, forecast:"0.1%", prev:"0.1%" },
+  { day:"Fri, Jun 27", time:"13:30", cur:"USD", flag:"🇺🇸", name:"PCE Price Index m/m", impact:"high", actual:null, forecast:"0.1%", prev:"0.1%" },
+  { day:"Fri, Jun 27", time:"15:00", cur:"CAD", flag:"🇨🇦", name:"RMPI m/m", impact:"low", actual:null, forecast:"-2.1%", prev:"-5.8%" },
+];
+
+let impactFilter = 'all';
+let curFilter = 'all';
+
+function count(impact){ return events.filter(e=>e.impact===impact).length; }
+document.getElementById('s-high').textContent = count('high');
+document.getElementById('s-med').textContent = count('medium');
+document.getElementById('s-low').textContent = count('low');
+document.getElementById('s-total').textContent = events.length;
+document.getElementById('week-range').textContent = 'Week of Jun 23 – Jun 27, 2026';
+
+function render(){
+  let filtered = events.filter(e => {
+    if(impactFilter !== 'all' && e.impact !== impactFilter) return false;
+    if(curFilter !== 'all' && e.cur !== curFilter) return false;
+    return true;
+  });
+  const tbody = document.getElementById('tbody');
+  if(!filtered.length){ tbody.innerHTML = `<tr><td colspan="7" class="empty">No events match this filter.</td></tr>`; return; }
+  let html = '', lastDay = '';
+  filtered.forEach(ev => {
+    if(ev.day !== lastDay){ html += `<tr class="day-row"><td colspan="7">${ev.day}</td></tr>`; lastDay = ev.day; }
+    const actClass = ev.actual ? (parseFloat(ev.actual) >= parseFloat(ev.forecast) ? 'pos' : 'neg') : 'muted';
+    html += `<tr>
+      <td class="time">${ev.time}</td>
+      <td><span class="cur-badge">${ev.flag} ${ev.cur}</span></td>
+      <td class="event-name">${ev.name}</td>
+      <td><span class="impact-badge ${ev.impact}"><span class="dot"></span>${ev.impact}</span></td>
+      <td class="val ${actClass}">${ev.actual || '—'}</td>
+      <td class="val forecast">${ev.forecast}</td>
+      <td class="val muted">${ev.prev}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    impactFilter = btn.dataset.f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+    render();
+  });
+});
+document.getElementById('cur-select').addEventListener('change', e => { curFilter = e.target.value; render(); });
+
+render();
+</script>
+</body>
+</html>
